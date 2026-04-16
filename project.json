@@ -1,0 +1,28 @@
+{
+  "overview": "Velora is a premium dating app with a dark-gold luxury aesthetic. Features Internet Identity login, UPI QR payment for premium, swipe/match/chat, 50 realistic demo profiles with auto-reply, verified gold badges, and full profile management.",
+  "features": [
+    "Dedicated login page as first screen",
+    "Dedicated /upgrade payment page with UPI QR flow",
+    "50 realistic demo profiles seeded in backend",
+    "Auto-reply logic for demo profile messages",
+    "Profile picture and cover picture upload",
+    "Full profile management (name, bio, age, interests, photos, avatar, cover)",
+    "Internet Identity authentication",
+    "Premium upgrade via UPI QR honor-based payment",
+    "Verified gold badge for premium members",
+    "Swipe/match/chat with real backend data"
+  ],
+  "category": "social",
+  "tags": [
+    "dating",
+    "premium",
+    "luxury",
+    "dark-gold",
+    "swipe",
+    "match",
+    "chat",
+    "upi",
+    "demo-profiles"
+  ],
+  "last_updated": "2026-04-16T20:13:15.839Z"
+}

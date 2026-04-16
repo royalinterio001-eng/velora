@@ -1,0 +1,188 @@
+// Version: 3.0.0
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DiscoveryFilters__425940570 =
+  {
+    genderPref : ?Gender__126613332;
+    interests : [Text];
+    maxAge : Nat;
+    minAge : Nat
+  };
+type ExternalBlob__246066408 = Blob;
+type Gender__126613332 = {#female; #male; #nonBinary; #other};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MatchId__543136929 = Text;
+type Match__904616457 =
+  {
+    createdAt : Timestamp__301639476;
+    matchId : MatchId__543136929;
+    superLiked : Bool;
+    user1 : UserId__158757552;
+    user2 : UserId__158757552
+  };
+type MessageId__291319400 = Nat;
+type MessageInternal__522078422 =
+  {
+    id : MessageId__291319400;
+    matchId : MatchId__543136929;
+    var readByRecipient : Bool;
+    sender : UserId__158757552;
+    sentAt : Timestamp__301639476;
+    text : Text
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldDiscoveryFilters__705724065 =
+  {
+    genderPref : ?OldGender__368168266;
+    interests : [Text];
+    maxAge : Nat;
+    minAge : Nat
+  };
+type OldGender__368168266 = {#female; #male; #nonBinary; #other};
+type OldMatch__227272324 =
+  {
+    createdAt : Timestamp__301639476;
+    matchId : MatchId__543136929;
+    superLiked : Bool;
+    user1 : UserId__158757552;
+    user2 : UserId__158757552
+  };
+type OldMessageInternal__315970881 =
+  {
+    id : MessageId__291319400;
+    matchId : MatchId__543136929;
+    var readByRecipient : Bool;
+    sender : UserId__158757552;
+    sentAt : Timestamp__301639476;
+    text : Text
+  };
+type OldProfileInternal__424520461 =
+  {
+    var age : Nat;
+    var bio : Text;
+    createdAt : Timestamp__301639476;
+    var filters : OldDiscoveryFilters__705724065;
+    var gender : OldGender__368168266;
+    var genderPreference : ?OldGender__368168266;
+    var height : ?Nat;
+    var interests : [Text];
+    var isPremium : Bool;
+    var lastSeen : Timestamp__301639476;
+    var location : Text;
+    var name : Text;
+    var photoKeys : [ExternalBlob__246066408];
+    var premiumActivatedAt : ?Int;
+    principal : UserId__158757552;
+    var profileComplete : Bool;
+    var subscriptionStatus : Text;
+    var superLikesRemaining : Nat;
+    var superLikesResetDay : Int;
+    var upiPaymentRef : ?Text
+  };
+type OldSwipeRecord__927050728 =
+  {
+    action : {#like; #pass; #superLike};
+    from : UserId__158757552;
+    target : UserId__158757552;
+    timestamp : Timestamp__301639476
+  };
+type ProfileInternal__488243141 =
+  {
+    var age : Nat;
+    var bio : Text;
+    var coverPicKey : ?Text;
+    createdAt : Timestamp__301639476;
+    var filters : DiscoveryFilters__425940570;
+    var gender : Gender__126613332;
+    var genderPreference : ?Gender__126613332;
+    var height : ?Nat;
+    var interests : [Text];
+    isDemo : Bool;
+    var isPremium : Bool;
+    var lastSeen : Timestamp__301639476;
+    var location : Text;
+    var name : Text;
+    var photoKeys : [ExternalBlob__246066408];
+    var premiumActivatedAt : ?Int;
+    principal : UserId__158757552;
+    var profileComplete : Bool;
+    var profilePicKey : ?Text;
+    var subscriptionStatus : Text;
+    var superLikesRemaining : Nat;
+    var superLikesResetDay : Int;
+    var upiPaymentRef : ?Text
+  };
+type SwipeAction__13556193 = {#like; #pass; #superLike};
+type SwipeRecord__716826235 =
+  {
+    action : SwipeAction__13556193;
+    from : UserId__158757552;
+    target : UserId__158757552;
+    timestamp : Timestamp__301639476
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor ({
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  in matches : Map__605269027<MatchId__543136929, OldMatch__227272324>;
+  in messages : List__415060402<OldMessageInternal__315970881>;
+  in nextMessageId : {var value : Nat};
+  in profiles :
+    Map__605269027<UserId__158757552, OldProfileInternal__424520461>;
+  in swipes : Map__605269027<Text, OldSwipeRecord__927050728>
+}, {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable demoProfiles :
+    {
+      var root : Node__46230540<Text, ProfileInternal__488243141>;
+      var size : Nat__490723111
+    };
+  stable demosSeeded : {var value : Bool};
+  stable matches :
+    {
+      var root : Node__46230540<MatchId__543136929, Match__904616457>;
+      var size : Nat__490723111
+    };
+  stable messages :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?MessageInternal__522078422]];
+      var elementIndex : Nat__490723111
+    };
+  stable nextMessageId : {var value : Nat};
+  stable profiles :
+    {
+      var root : Node__46230540<UserId__158757552, ProfileInternal__488243141>;
+      var size : Nat__490723111
+    };
+  stable swipes :
+    {
+      var root : Node__46230540<Text, SwipeRecord__716826235>;
+      var size : Nat__490723111
+    }
+}) ;

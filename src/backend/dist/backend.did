@@ -1,0 +1,152 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserId = principal;
+type Timestamp = int;
+type SwipeAction = 
+ variant {
+   like;
+   pass;
+   superLike;
+ };
+type ProfileInput = 
+ record {
+   age: nat;
+   bio: text;
+   coverPic: opt text;
+   gender: Gender;
+   genderPreference: opt Gender;
+   height: opt nat;
+   interests: vec text;
+   location: text;
+   name: text;
+   photoKeys: vec ExternalBlob;
+   profilePic: opt text;
+ };
+type Profile = 
+ record {
+   age: nat;
+   bio: text;
+   coverPicUrl: opt text;
+   createdAt: Timestamp;
+   filters: DiscoveryFilters;
+   gender: Gender;
+   genderPreference: opt Gender;
+   height: opt nat;
+   interests: vec text;
+   isDemo: bool;
+   isPremium: bool;
+   lastSeen: Timestamp;
+   location: text;
+   name: text;
+   photoKeys: vec ExternalBlob;
+   premiumActivatedAt: opt int;
+   "principal": UserId;
+   profileComplete: bool;
+   profilePicUrl: opt text;
+   subscriptionStatus: text;
+   superLikesRemaining: nat;
+ };
+type MessageId = nat;
+type Message = 
+ record {
+   id: MessageId;
+   matchId: MatchId;
+   readByRecipient: bool;
+   sender: UserId;
+   sentAt: Timestamp;
+   "text": text;
+ };
+type MatchId = text;
+type Match = 
+ record {
+   createdAt: Timestamp;
+   matchId: MatchId;
+   superLiked: bool;
+   user1: UserId;
+   user2: UserId;
+ };
+type Gender = 
+ variant {
+   female;
+   male;
+   nonBinary;
+   other;
+ };
+type ExternalBlob = blob;
+type DiscoveryPage = 
+ record {
+   nextOffset: opt nat;
+   profiles: vec Profile;
+ };
+type DiscoveryFilters = 
+ record {
+   genderPref: opt Gender;
+   interests: vec text;
+   maxAge: nat;
+   minAge: nat;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  activatePremium: (paymentRef: text) -> (bool);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createProfile: (input: ProfileInput) -> ();
+  getCallerUserRole: () -> (UserRole) query;
+  getDemoProfile: (demoKey: text) -> (opt Profile) query;
+  getDemoProfileCount: () -> (nat) query;
+  getDiscoveryProfiles: (offset: nat, limit: nat) -> (DiscoveryPage) query;
+  getFilters: () -> (opt DiscoveryFilters) query;
+  getMatch: (targetPrincipal: UserId) -> (opt Match) query;
+  getMatches: () -> (vec Match) query;
+  getMessages: (matchId: MatchId, offset: nat, limit: nat) ->
+   (vec Message) query;
+  getMyProfile: () -> (opt Profile) query;
+  getPremiumStatus: () ->
+   (record {
+      isPremium: bool;
+      premiumActivatedAt: opt int;
+      subscriptionStatus: text;
+    }) query;
+  getProfile: (user: UserId) -> (opt Profile) query;
+  isCallerAdmin: () -> (bool) query;
+  markMessagesRead: (matchId: MatchId) -> ();
+  recordDemoSwipe: (demoKey: text, action: SwipeAction) ->
+   (record {
+      matchId: opt MatchId;
+      matched: bool;
+    });
+  recordSwipe: (targetPrincipal: UserId, action: SwipeAction) ->
+   (record {
+      matchId: opt MatchId;
+      matched: bool;
+    });
+  saveFilters: (filters: DiscoveryFilters) -> ();
+  seedDemoProfiles: () -> (text);
+  sendMessage: (matchId: MatchId, "text": text) -> (Message);
+  updateProfile: (input: ProfileInput) -> ();
+}
